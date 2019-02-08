@@ -1,0 +1,36 @@
+{
+    "name": "masterflash-ru/stdlib",
+    "description": "Сервис-библиотека для обработки изображений",
+    "type": "Service",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "masterflash",
+        "zendframework"
+    ],
+    "homepage": "https://masterflash.ru/",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mf\\Stdlib\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mf\\Stdlib\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev",
+            "dev-develop": "1.0-dev"
+        },
+        "zf": {
+            "component": "Mf\\Stdlib",
+            "config-provider": "masterflash-ru\\Mf\\Stdlib\\ConfigProvider"
+        }
+    }
+}
