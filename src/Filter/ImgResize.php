@@ -2,7 +2,7 @@
 /**
 Ресайз изображений разными графическими библиотеками
  */
-namespace Mf\Stdlib\Filter;
+namespace Mf\Imglib\Filter;
 
 use Zend\Filter\FilterInterface;
 use Exception;
@@ -11,9 +11,9 @@ use Mf\Storage\Filter\Service\ImgAbstract;
 class ImgResize  implements FilterInterface
 {
         protected static $classMap = [
-        'gd'                => 'Mf\Storage\Filter\Service\Gd',
-        'imagick'           => 'Mf\Storage\Filter\Service\Imagick',
-        'consoleimagick'    => 'Mf\Storage\Filter\Service\Consoleimagick',
+        'gd'                => 'Mf\Imglib\Filter\Adapter\Gd',
+        'imagick'           => 'Mf\Imglib\Filter\Adapter\Imagick',
+        'consoleimagick'    => 'Mf\Imglib\Filter\Adapter\Consoleimagick',
         ];
 
 /**

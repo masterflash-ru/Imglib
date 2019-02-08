@@ -2,7 +2,7 @@
 /**
 наложение водного знака на изображение разными графическими библиотеками
  */
-namespace Mf\Stdlib\Filter;
+namespace Mf\Imglib\Filter;
 
 use Zend\Filter\FilterInterface;
 use Exception;
@@ -12,9 +12,9 @@ class Watermark  implements FilterInterface
 {
 	protected $_adapter=NULL;			//объект адаптера который обрабатывает графику
     protected static $classMap = [
-        'gd'                => 'Mf\Storage\Filter\Service\Gd',
-        'imagick'           => 'Mf\Storage\Filter\Service\Imagick',
-        'consoleimagick'    => 'Mf\Storage\Filter\Service\Consoleimagick',
+        'gd'                => 'Mf\Imglib\Filter\Adapter\Gd',
+        'imagick'           => 'Mf\Imglib\Filter\Adapter\Imagick',
+        'consoleimagick'    => 'Mf\Imglib\Filter\Adapter\Consoleimagick',
     ];
 
 
