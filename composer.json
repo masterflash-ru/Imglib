@@ -1,5 +1,5 @@
 {
-    "name": "masterflash-ru/stdlib",
+    "name": "masterflash-ru/imglib",
     "description": "Сервис-библиотека для обработки изображений",
     "type": "Service",
     "license": "BSD-3-Clause",
@@ -15,12 +15,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Mf\\Stdlib\\": "src/"
+            "Mf\\Imglib\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Mf\\Stdlib\\": "src/"
+            "Mf\\Imglib\\": "src/"
         }
     },
     "extra": {
@@ -29,8 +29,8 @@
             "dev-develop": "1.0-dev"
         },
         "zf": {
-            "component": "Mf\\Stdlib",
-            "config-provider": "masterflash-ru\\Mf\\Stdlib\\ConfigProvider"
+            "component": "Mf\\Imglib",
+            "config-provider": "masterflash-ru\\Mf\\Imglib\\ConfigProvider"
         }
     }
 }
