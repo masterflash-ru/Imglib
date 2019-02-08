@@ -6,7 +6,7 @@ namespace Mf\Imglib\Filter;
 
 use Zend\Filter\FilterInterface;
 use Exception;
-use Mf\Storage\Filter\Service\ImgAbstract;
+
 
 class ImgResize  implements FilterInterface
 {
@@ -33,7 +33,7 @@ class ImgResize  implements FilterInterface
 	protected $_adapter=null;
 
 
-	protected $_options = array(
+	protected $_options = [
 		'width' => 700,
 		'height' => 100,
 		'method' => IMG_METHOD_SCALE_FIT_W,
@@ -42,11 +42,11 @@ class ImgResize  implements FilterInterface
 		'valign' => IMG_ALIGN_CENTER,
 		'adapter'=>'Gd',
 		'imagemagick_console_path' => "",
-	);
+	];
 
 	
-	public function __construct($options = array())
-	 {
+	public function __construct(array $options = [])
+    {
 		$this->setOptions($options);
 	}
 	
@@ -56,12 +56,8 @@ class ImgResize  implements FilterInterface
 		return $value;
 	}
 	
-	public function setOptions(array $options=null)
+	public function setOptions(array $options=[])
 	{
-		if (!is_array($options)) {
-			throw new Exception("Не допустимая опция, должен быть массив");	
-		}
-        
         $adapter = $options['adapter'];
         if (isset(static::$classMap[strtolower($adapter)])) {
             $adapter = static::$classMap[strtolower($adapter)];
@@ -73,12 +69,13 @@ class ImgResize  implements FilterInterface
                 $adapter
             ));
         }
-        if (!empty($options)&& is_array($options)){
+        if (!empty($options) && is_array($options)){
             foreach ($options as $k => $v) {
-                    if (array_key_exists($k, $this->_options)) {$this->_options[$k] = $v;}
+                if (array_key_exists($k, $this->_options)) {
+                    $this->_options[$k] = $v;
+                }
             }
         }
-
         
 		$this->_adapter=new $adapter($this->_options);
 		return $this;

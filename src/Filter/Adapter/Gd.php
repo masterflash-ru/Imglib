@@ -9,8 +9,7 @@ use Exception;
 class Gd extends ImgAbstract
 {
 	
-	
-	/**
+/**
 * Resize image
 *
 * @param $content Content of source imge
@@ -22,35 +21,31 @@ class Gd extends ImgAbstract
 		$content=$this->readImg($value);
 		
 		$sourceImage = imagecreatefromstring($content);
-		if (!is_resource($sourceImage)) {	throw new Exception("Ошибка чтения файла $value");}
+		if (!is_resource($sourceImage)) {throw new Exception("Ошибка чтения файла $value");}
 		
 		$sourceWidth = imagesx($sourceImage);
 		$sourceHeight = imagesy($sourceImage);
 
-		if ($sourceWidth <= $this->_options['width'] && $sourceHeight <= $this->_options['height']) 
-		{
-			imagedestroy($sourceImage);
-			return $value;
+		if ($sourceWidth <= $this->_options['width'] && $sourceHeight <= $this->_options['height']) {
+            imagedestroy($sourceImage);
+            return $value;
 		}
 		
 		list( , , $imageType) = getimagesizefromstring($content);
 
-		switch ($this->_options['method'])
-		 {
-			case IMG_METHOD_CROP://просто вырезать кусок
+		switch ($this->_options['method']) {
+            case IMG_METHOD_CROP://просто вырезать кусок
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateCropCoord($sourceWidth, $sourceHeight);
 				break;
-			case	IMG_METHOD_SCALE_FIT_W:
-			case	IMG_METHOD_SCALE_FIT_H:
+			case IMG_METHOD_SCALE_FIT_W:
+			case IMG_METHOD_SCALE_FIT_H:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMaxCoord($sourceWidth, $sourceHeight);
 				break;
 			case IMG_METHOD_SCALE_WH_CROP:
-				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMinCoord($sourceWidth, $sourceHeight);
-				
-				
+				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMinCoord($sourceWidth, $sourceHeight);				
 				break;
 			default:
-				throw new Exception('Unknow resize method');
+				throw new Exception('Неизвестный метод обработки изображения');
 		}
 		
 		// Create the target image
@@ -60,10 +55,9 @@ class Gd extends ImgAbstract
 			$targetImage = ImageCreate($width, $height);
 		}
 		if (!is_resource($targetImage)) {
-			throw new Exception('Cannot initialize new GD image stream');
+			throw new Exception('Невозможно создать ресурс GD');
 		}
 		
-		// Copy the source image to the target image
 		if ($this->_options['method'] == IMG_METHOD_CROP) {
 			$result = ImageCopy($targetImage, $sourceImage, 0, 0, $X, $Y, $W, $H);
 		} elseif (function_exists('imagecopyresampled')) {
@@ -81,14 +75,14 @@ class Gd extends ImgAbstract
 				ImageGif($targetImage);
 				break;
 			case IMAGETYPE_JPEG:
-				ImageJpeg($targetImage, null, 100); // best quality
+				ImageJpeg($targetImage, null, 100);
 				break;
 			case IMAGETYPE_PNG:
-				ImagePng($targetImage, null, 0); // no compression
+				ImagePng($targetImage, null, 0);
 				break;
 			default:
 				ob_end_clean();
-				throw new Exception("Не известный метод обработки картинок");	
+				throw new Exception("Неизвестный метод обработки картинок");	
 		}
 		ImageDestroy($targetImage);
 		$finalImage = ob_get_clean();
@@ -96,18 +90,11 @@ class Gd extends ImgAbstract
 		$this->writeImg($value, $finalImage);
 		
 		//ЕСЛИ точно вырезаем, тогда рекурсивно обратиться с методом для вырезки
-		if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) 
-			{
-				$this->_options['method']=IMG_METHOD_CROP;
-				return $this->resize($value);
-			}
-	
-
+		if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) {
+            $this->_options['method']=IMG_METHOD_CROP;
+            return $this->resize($value);
+        }
 	return $value;
 	}
 	
-	
-	
-	
 }
-?>

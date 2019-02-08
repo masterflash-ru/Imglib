@@ -11,38 +11,39 @@ abstract class ImgAbstract
 
 	protected $_options=[];
 
-	
 	public function __construct($options = [])
 	 {		
 		$this->setOptions($options);
 	}
 	
-	
+
 	public function setOptions($options)
 	{
 		$this->_options = $options;
 	}
 	
-	//чтение изображения в память и возвращает BLOB строку
-//	$value - имя файла
+	/**
+    * чтение изображения в память и возвращает BLOB строку
+    * $value - имя файла
+    */
 protected function readImg($value)
-{		
-	if (!file_exists($value)) {throw new Exception("Исходный файл ($value) для работы не найден");}
-
-		if (file_exists($value) and !is_writable($value)) {throw new Exception("В файл $value нельзя записать");}
-
-		$content = file_get_contents($value);
-		if (!$content) {throw new Exception("Ошибка чтения файла $value");}
-	return $content;
+{
+    if (!file_exists($value)) {throw new Exception("Исходный файл ($value) для работы не найден");}
+    if (file_exists($value) and !is_writable($value)) {throw new Exception("В файл $value нельзя записать");}
+    $content = file_get_contents($value);
+    if (!$content) {throw new Exception("Ошибка чтения файла $value");}
+    return $content;
 }
 
-//Запись BLOB строки в файл
-////	$value - имя файла
+    
+/**
+* Запись BLOB строки в файл
+* $value - имя файла
+*/
 protected function writeImg($value, $finalImage)
-{		
-$result = file_put_contents($value, $finalImage);
-
-		if (!$result) {throw new Exception("В файл $value нельзя записать");}		
+{
+    $result = file_put_contents($value, $finalImage);
+    if (!$result) {throw new Exception("В файл $value нельзя записать");}		
 }
 
 /**
@@ -80,25 +81,20 @@ $result = file_put_contents($value, $finalImage);
 		if ( $this->_options['percent'] ) {
 			$width = floor($this->_options['percent'] * $sourceWidth);
 			$height = floor($this->_options['percent'] * $sourceHeight);
-		} else 
-		{
-			//новые размеры
-			$width = $this->_options['width'];
-			$height = $this->_options['height'];
-			
-			//приводит к горизонтальному размеру
-			if ($this->_options['method']==IMG_METHOD_SCALE_FIT_W)
-				{
-					$height=floor($sourceHeight * $width/$sourceWidth);//преобразовать пропорционально
-				}
-	
-			//приводит к вертикальному размеру
-			if ($this->_options['method']==IMG_METHOD_SCALE_FIT_H)
-				{
-					$width=floor($sourceWidth * $height /$sourceHeight);//преобразовать пропорционально
-				}
-	}
-		return array(0, 0, $sourceWidth, $sourceHeight, $width, $height);
+		} else {
+            //новые размеры
+            $width = $this->_options['width'];
+            $height = $this->_options['height'];
+            //приводит к горизонтальному размеру
+            if ($this->_options['method']==IMG_METHOD_SCALE_FIT_W){
+                $height=floor($sourceHeight * $width/$sourceWidth);//преобразовать пропорционально
+            }
+            //приводит к вертикальному размеру
+            if ($this->_options['method']==IMG_METHOD_SCALE_FIT_H){
+                $width=floor($sourceWidth * $height /$sourceHeight);//преобразовать пропорционально
+            }
+        }
+        return array(0, 0, $sourceWidth, $sourceHeight, $width, $height);
 	}
 	
 	/**
@@ -115,27 +111,21 @@ $result = file_put_contents($value, $finalImage);
 		$W = $sourceWidth;	//изначальные размеры
 		$H = $sourceHeight;
 		
-		if ( $this->_options['percent'] )
-		{
-			$width = floor($this->_options['percent'] * $W);
-			$height = floor($this->_options['percent'] * $H);
-		} else 
-		{
-			$width = $this->_options['width'];//новые размеры
-			$height = $this->_options['height'];
-			
-			$ratio=$W/$H;		//соотношение сторон исходный
-			
-			//вычислим  высоту пропорционально, ширину берем новую
-			$hh=floor($width / $ratio);
+		if ( $this->_options['percent'] ){
+            $width = floor($this->_options['percent'] * $W);
+            $height = floor($this->_options['percent'] * $H);
+        } else {
+            $width = $this->_options['width'];//новые размеры
+            $height = $this->_options['height'];
+            $ratio=$W/$H;		//соотношение сторон исходный
+            //вычислим  высоту пропорционально, ширину берем новую
+            $hh=floor($width / $ratio);
 			$ww=$width;
-			if ($hh<$height)
-				{
-					//новая высота меньше новой, поэтому расчитываем новую ширину, т.е. наоборот!
-					$hh=$height;
-					$ww=floor($height*$ratio);
-				}
-			
+			if ($hh<$height){
+                //новая высота меньше новой, поэтому расчитываем новую ширину, т.е. наоборот!
+                $hh=$height;
+                $ww=floor($height*$ratio);
+            }
 		}
 		return array($X, $Y, $W, $H, $ww, $hh);
 	}
@@ -162,4 +152,3 @@ $result = file_put_contents($value, $finalImage);
 	
 	
 }
-?>
