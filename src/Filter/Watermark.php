@@ -29,9 +29,6 @@ class Watermark  implements FilterInterface
 	}
 	
 
-	/**
-собственно сам фильтр
-*/
 public function filter($value)
 {
     $this->_adapter->watermark($value);

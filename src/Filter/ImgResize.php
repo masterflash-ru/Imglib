@@ -10,68 +10,52 @@ use Mf\Storage\Filter\Service\ImgAbstract;
 
 class ImgResize  implements FilterInterface
 {
-        protected static $classMap = [
+    protected static $classMap = [
         'gd'                => 'Mf\Imglib\Filter\Adapter\Gd',
         'imagick'           => 'Mf\Imglib\Filter\Adapter\Imagick',
         'consoleimagick'    => 'Mf\Imglib\Filter\Adapter\Consoleimagick',
         ];
 
 /**
-*констатны параметров обработки указаны в ImgAbstract
-ниже те же самые, для удобства задания параметров
+*констатны параметров для совместимости
 */
-	const METHOD_SCALE_WH_CROP = 1;
-	const METHOD_SCALE_FIT_W=2;		//пропорционально к указаной ширине
-	const METHOD_SCALE_FIT_H=3;		//пропорционально к указаной высоте
-	const METHOD_CROP = 4;				//просто вырезать кусок
+	const METHOD_SCALE_WH_CROP = IMG_METHOD_SCALE_WH_CROP;
+	const METHOD_SCALE_FIT_W=IMG_METHOD_SCALE_FIT_W;
+	const METHOD_SCALE_FIT_H=IMG_METHOD_SCALE_FIT_H;
+	const METHOD_CROP = IMG_METHOD_CROP;
 	
-	const ALIGN_CENTER = 0;
-	const ALIGN_LEFT = -1;
-	const ALIGN_RIGHT = +1;
-	const ALIGN_TOP = -1;
-	const ALIGN_BOTTOM = +1; 
+	const ALIGN_CENTER = IMG_ALIGN_CENTER;
+	const ALIGN_LEFT = IMG_ALIGN_LEFT;
+	const ALIGN_RIGHT = IMG_ALIGN_RIGHT;
+	const ALIGN_TOP = IMG_ALIGN_TOP;
+	const ALIGN_BOTTOM = IMG_ALIGN_BOTTOM; 
 		
-	protected $_adapter=NULL;			//объект адаптера который обрабатывает графику
-//опции по умолчанию
+	protected $_adapter=null;
+
 
 	protected $_options = array(
-		'width' => 700,											 // новая ширина
-		'height' => 100, 										// новая высота
-		'method' => ImgAbstract::METHOD_SCALE_FIT_W, // метод ресайза, см константы
-		'percent' => 0, 											// значение в процентах
-		'halign' => ImgAbstract::ALIGN_CENTER, 				// горизонтальное выравнивание при вырезании
-		'valign' => ImgAbstract::ALIGN_CENTER, 				// вертикальное выравнивание при вырезании
-		'adapter'=>'Gd',										//адаптер обработки картинок
-		'imagemagick_console_path' => "",			//путь к консольным программам ImageMagick
+		'width' => 700,
+		'height' => 100,
+		'method' => IMG_METHOD_SCALE_FIT_W,
+		'percent' => 0,
+		'halign' => IMG_ALIGN_CENTER,
+		'valign' => IMG_ALIGN_CENTER,
+		'adapter'=>'Gd',
+		'imagemagick_console_path' => "",
 	);
 
 	
-/**
-* Constructor
-*
-* @param array $options Filter options
-*/
 	public function __construct($options = array())
 	 {
 		$this->setOptions($options);
 	}
 	
-	
-	/**
-* Resize the file $value with the defined settings
-*
-* @param string $value Full path of file to change
-* @return string The filename which has been set, or false when there were errors
-*/
 	public function filter($value)
 	{
         $this->_adapter->resize($value);
 		return $value;
 	}
 	
-	/**
-* @return object
-*/
 	public function setOptions(array $options=null)
 	{
 		if (!is_array($options)) {
@@ -96,7 +80,7 @@ class ImgResize  implements FilterInterface
         }
 
         
-		$this->_adapter=new $adapter($this->_options);			//создаем адаптер
+		$this->_adapter=new $adapter($this->_options);
 		return $this;
 	}
 }

@@ -37,14 +37,14 @@ class Gd extends ImgAbstract
 
 		switch ($this->_options['method'])
 		 {
-			case ImgAbstract::METHOD_CROP://просто вырезать кусок
+			case IMG_METHOD_CROP://просто вырезать кусок
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateCropCoord($sourceWidth, $sourceHeight);
 				break;
-			case	ImgAbstract::METHOD_SCALE_FIT_W:
-			case	ImgAbstract::METHOD_SCALE_FIT_H:
+			case	IMG_METHOD_SCALE_FIT_W:
+			case	IMG_METHOD_SCALE_FIT_H:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMaxCoord($sourceWidth, $sourceHeight);
 				break;
-			case ImgAbstract::METHOD_SCALE_WH_CROP:
+			case IMG_METHOD_SCALE_WH_CROP:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMinCoord($sourceWidth, $sourceHeight);
 				
 				
@@ -64,7 +64,7 @@ class Gd extends ImgAbstract
 		}
 		
 		// Copy the source image to the target image
-		if ($this->_options['method'] == ImgAbstract::METHOD_CROP) {
+		if ($this->_options['method'] == IMG_METHOD_CROP) {
 			$result = ImageCopy($targetImage, $sourceImage, 0, 0, $X, $Y, $W, $H);
 		} elseif (function_exists('imagecopyresampled')) {
 			$result = ImageCopyResampled($targetImage, $sourceImage, 0, 0, $X, $Y, $width, $height, $W, $H);
@@ -96,9 +96,9 @@ class Gd extends ImgAbstract
 		$this->writeImg($value, $finalImage);
 		
 		//ЕСЛИ точно вырезаем, тогда рекурсивно обратиться с методом для вырезки
-		if (ImgAbstract::METHOD_SCALE_WH_CROP==$this->_options['method']) 
+		if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) 
 			{
-				$this->_options['method']=ImgAbstract::METHOD_CROP;
+				$this->_options['method']=IMG_METHOD_CROP;
 				return $this->resize($value);
 			}
 	

@@ -8,19 +8,6 @@ use Exception;
 
 abstract class ImgAbstract
 {
-/**
-*повторяют головного объекта
-*/
-	const METHOD_SCALE_WH_CROP = 1;
-	const METHOD_SCALE_FIT_W=2;		//пропорционально к указаной ширине
-	const METHOD_SCALE_FIT_H=3;		//пропорционально к указаной высоте
-	const METHOD_CROP = 4;				//просто вырезать кусок
-	
-	const ALIGN_CENTER = 0;
-	const ALIGN_LEFT = -1;
-	const ALIGN_RIGHT = +1;
-	const ALIGN_TOP = -1;
-	const ALIGN_BOTTOM = +1; 
 
 	protected $_options=[];
 
@@ -100,13 +87,13 @@ $result = file_put_contents($value, $finalImage);
 			$height = $this->_options['height'];
 			
 			//приводит к горизонтальному размеру
-			if ($this->_options['method']==self::METHOD_SCALE_FIT_W)
+			if ($this->_options['method']==IMG_METHOD_SCALE_FIT_W)
 				{
 					$height=floor($sourceHeight * $width/$sourceWidth);//преобразовать пропорционально
 				}
 	
 			//приводит к вертикальному размеру
-			if ($this->_options['method']==self::METHOD_SCALE_FIT_H)
+			if ($this->_options['method']==IMG_METHOD_SCALE_FIT_H)
 				{
 					$width=floor($sourceWidth * $height /$sourceHeight);//преобразовать пропорционально
 				}
@@ -163,9 +150,9 @@ $result = file_put_contents($value, $finalImage);
 */
 	protected function __coord($align, $src, $dst)
 	{
-		if ( $align < self::ALIGN_CENTER ) {
+		if ( $align < IMG_ALIGN_CENTER ) {
 			$result = 0;
-		} elseif ( $align > self::ALIGN_CENTER ) {
+		} elseif ( $align > IMG_ALIGN_CENTER ) {
 			$result = $src - $dst;
 		} else {
 			$result = ($src - $dst) >> 1;

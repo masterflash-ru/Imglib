@@ -35,21 +35,21 @@ class Consoleimagick extends ImgAbstract
 		
 		switch ($this->_options['method'])
 		 {
-			case ImgAbstract::METHOD_CROP:
+			case IMG_METHOD_CROP:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateCropCoord($sourceWidth, $sourceHeight);
 				break;
-			case	ImgAbstract::METHOD_SCALE_FIT_W:
-			case	ImgAbstract::METHOD_SCALE_FIT_H:
+			case	IMG_METHOD_SCALE_FIT_W:
+			case	IMG_METHOD_SCALE_FIT_H:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMaxCoord($sourceWidth, $sourceHeight);
 				break;
-			case ImgAbstract::METHOD_SCALE_WH_CROP:
+			case IMG_METHOD_SCALE_WH_CROP:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMinCoord($sourceWidth, $sourceHeight);
 				break;
 			default:throw new Exception("Не известный метод обработки картинок");	
 		} 
 		
 		
-		if ($this->_options['method'] == ImgAbstract::METHOD_CROP) 
+		if ($this->_options['method'] == IMG_METHOD_CROP) 
 			{
 				shell_exec ($this->_options['imagemagick_console_path']."mogrify  -crop ".$width."x".$height."+$X+$Y '$value'");
 			} 
@@ -60,9 +60,9 @@ class Consoleimagick extends ImgAbstract
 		
 		
 		
-		if (ImgAbstract::METHOD_SCALE_WH_CROP==$this->_options['method']) 
+		if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) 
 			{
-				$this->_options['method']=ImgAbstract::METHOD_CROP; 
+				$this->_options['method']=IMG_METHOD_CROP; 
 				return $this->resize($value);
 			}
 		return $value;
