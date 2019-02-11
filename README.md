@@ -1,3 +1,5 @@
-# Imglib
+библиотека обработки изображений для Simba
 
-старт работ
+Установка
+composer require masterflash-ru/imglib
+
