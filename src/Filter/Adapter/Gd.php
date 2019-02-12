@@ -119,19 +119,22 @@ class Gd extends ImgAbstract
 
 /**
 * генерирует альтернативные изображения из исходного
-* на входе строка  к исходному файлу
+* $value - на входе строка  к исходному файлу из которого создаем альтернативные форматы изображения
 * на выходе массив 
 */
     public function alternative($value)
     {
+        $valueIn=$value["default"];
         $support=gd_info();
-        $path_parts = pathinfo($value);        
+        $path_parts = pathinfo($valueIn);  
+        $content=$this->readImg($valueIn);
+        $sourceImage = imagecreatefromstring($content);
+        if (!is_resource($sourceImage)) {
+            throw new Exception("Ошибка чтения файла $value");
+        }
+
         foreach ($this->_options["formats"] as $format){
-            $content=$this->readImg($value);
-            $sourceImage = imagecreatefromstring($content);
-            if (!is_resource($sourceImage)) {throw new Exception("Ошибка чтения файла $value");}
             ob_start();
-            $value=[];
             switch ($format){
                 case "webp":
                     if (!$support[static::$support[$format]]) {

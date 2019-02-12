@@ -25,7 +25,8 @@ class ImgAlternative  implements FilterInterface
 		'imagemagick_console_path' => "",
         "formats" =>[
             "webp"
-        ]
+        ],
+        "quality"=>0
 	];
 
 	
@@ -39,8 +40,7 @@ class ImgAlternative  implements FilterInterface
         if (!is_array($value)){
             throw new Exception("Для фильтра ImgAlternative на входе должен быть массив с ключем 'default' в котором полный путь к обрабатываемому файлу");
         }
-
-        $value=array_merge($value,$this->_adapter->alternative($value["default"]));
+        $value=$this->_adapter->alternative($value);
 		return $value;
 	}
 	

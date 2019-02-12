@@ -9,7 +9,8 @@ use Exception;
 
 class Consoleimagick extends ImgAbstract
 {
-	
+
+    
 /**
 * ресайз изображений
 *
@@ -64,7 +65,40 @@ class Consoleimagick extends ImgAbstract
 		return $value;
 	}
 
+/**
+* генерирует альтернативные изображения из исходного
+* на входе строка  к исходному файлу
+* на выходе массив 
+*/
+    public function alternative($value)
+    {
+        $valueIn=$value["default"];
+        $quality=$this->_options["quality"];
 
+        $path_parts = pathinfo($valueIn);        
+        foreach ($this->_options["formats"] as $format){
+            switch ($format){
+                case "webp":
+                case "jpf":
+                    $value[$format]=$path_parts["dirname"]."/".$path_parts["filename"].".".$format;
+                    shell_exec ($this->_options['imagemagick_console_path']."convert  '".$valueIn."' -quality {$quality} "."'" .$value[$format] ."'");
+                    /*проверим, появился ли файл, если нет, ошибка*/
+                    if (!is_readable($value[$format])){
+                        throw new Exception("Не удалось преобразрвание Формата {$format} в адаптере ".__CLASS__);
+                    }
+                    break;
+                default:
+                    throw new Exception("Формат {$format} не поддерживается адаптером ".__CLASS__);	
+            }
+        }
+        return $value;
+        
+    }
+
+
+/**
+*наложение водного знака, пока как есть
+*/
 public function watermark($value)
 {
 	if ($this->_options['waterimage']) {
