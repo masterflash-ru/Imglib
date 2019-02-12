@@ -49,23 +49,24 @@ class ImgResize  implements FilterInterface
 	
 	public function setOptions(array $options=[])
 	{
-        $adapter = $options['adapter'];
-        if (isset(static::$classMap[strtolower($adapter)])) {
-            $adapter = static::$classMap[strtolower($adapter)];
-        }
-        if (! class_exists($adapter)) {
-            throw new Exception(sprintf(
-                '%s не допустимое имя класса для метода: "%s"',
-                __METHOD__,
-                $adapter
-            ));
-        }
         if (!empty($options) && is_array($options)){
             foreach ($options as $k => $v) {
                 if (array_key_exists($k, $this->_options)) {
                     $this->_options[$k] = $v;
                 }
             }
+        }
+
+        $adapter =  $this->_options['adapter'];
+        if (isset(static::$classMap[strtolower($adapter)])) {
+            $adapter = static::$classMap[strtolower($adapter)];
+        }
+        if (! class_exists($adapter)) {
+            throw new Exception(sprintf(
+                '%s не допустимое имя адаптера: "%s"',
+                __METHOD__,
+                $adapter
+            ));
         }
         
 		$this->_adapter=new $adapter($this->_options);

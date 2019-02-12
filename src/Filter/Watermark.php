@@ -35,11 +35,15 @@ public function filter($value)
     return $value;
 }
 	
-public function setOptions(array $options)
+public function setOptions(array $options=[])
 	{
-		if (!is_array($options)) {
-			throw new Exception("Не допустимая опция, должен быть массив");	
-		}
+        if (!empty($options)&& is_array($options)){
+            foreach ($options as $k => $v) {
+                if (array_key_exists($k, $this->_options)) {
+                    $this->_options[$k] = $v;
+                }
+            }
+        }
         
         $adapter = $options['adapter'];
         if (isset(static::$classMap[strtolower($adapter)])) {
@@ -47,17 +51,11 @@ public function setOptions(array $options)
         }
         if (! class_exists($adapter)) {
             throw new Exception(sprintf(
-                '%s не допустимое имя класса для метода: "%s"',
+                '%s не допустимое имя адаптера: "%s"',
                 __METHOD__,
                 $adapter
             ));
         }
-        if (!empty($options)&& is_array($options)){
-            foreach ($options as $k => $v) {
-                    if (array_key_exists($k, $this->_options)) {$this->_options[$k] = $v;}
-            }
-        }
-
 		$this->_adapter=new $adapter($this->_options);			//создаем адаптер
 		return $this;
 	}
