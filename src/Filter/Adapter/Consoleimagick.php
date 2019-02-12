@@ -10,15 +10,25 @@ use Exception;
 class Consoleimagick extends ImgAbstract
 {
 	
-	
 /**
-* Resize image
+* ресайз изображений
 *
-* @param $content Content of source imge
-* @param $value Path to source file
-* @return Content of resized image
+* @param $value массив путей к файлу+имя имена
+* @return возвращает массив без изменений, но файлы уже преобразованы
 */
 	public function resize($value)
+	{
+        foreach ($value as $valueItem){
+            $this->resizeItem($valueItem);
+        }
+	return $value;
+	}
+
+/**
+* внутренняя для обработки одного элемента
+* $value - строка полного имени файла
+*/    
+	protected function resizeItem($value)
 	{
         $imgsize=explode("x",shell_exec($this->_options['imagemagick_console_path']."identify -format \"%[fx:w]x%[fx:h]\"  '$value'"));
 		$sourceWidth =(int)$imgsize[0];
@@ -49,7 +59,7 @@ class Consoleimagick extends ImgAbstract
         }
         if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) {
             $this->_options['method']=IMG_METHOD_CROP; 
-            return $this->resize($value);
+            return $this->resizeItem($value);
         }
 		return $value;
 	}

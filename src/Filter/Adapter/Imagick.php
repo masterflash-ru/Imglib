@@ -9,15 +9,25 @@ use Imagick as PhpImagick;
 class Imagick extends ImgAbstract
 {
 	
-	
 /**
-* Resize image
+* ресайз изображений
 *
-* @param $content Content of source imge
-* @param $value Path to source file
-* @return Content of resized image
+* @param $value массив путей к файлу+имя имена
+* @return возвращает массив без изменений, но файлы уже преобразованы
 */
 	public function resize($value)
+	{
+        foreach ($value as $valueItem){
+            $this->resizeItem($valueItem);
+        }
+	return $value;
+	}
+
+/**
+* внутренняя для обработки одного элемента
+* $value - строка полного имени файла
+*/    
+	protected function resizeItem($value)
 	{
 		$content=$this->readImg($value);
 		$Imagick=new PhpImagick();
@@ -46,19 +56,20 @@ class Imagick extends ImgAbstract
 			case IMG_METHOD_SCALE_WH_CROP:
 				list($X, $Y, $W, $H, $width, $height) = $this->__calculateScaleMinCoord($sourceWidth, $sourceHeight);
 				break;
-			default:throw new Exception('Unknow resize method');	
+			default:throw new Exception('Неизвестный метод обработки изображения');	
 		}
 
 		if ($this->_options['method'] == IMG_METHOD_CROP) {
             $Imagick->cropImage ($width,$height, $X, $Y);
         } else {
-            $Imagick->resizeImage($width,$height, imagick::FILTER_LANCZOS, 0.9, true);
+            $Imagick->resizeImage($width,$height, PhpImagick::FILTER_LANCZOS, 0.9, true);
         }
 		$final=$Imagick->getImagesBlob();
 		$Imagick->destroy ();
 		$this->writeImg($value, $final);
         if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) {
-            $this->_options['method']=IMG_METHOD_CROP; return $this->resize($value);
+            $this->_options['method']=IMG_METHOD_CROP; 
+            return $this->resizeItem($value);
         }
 		return $value;
 	}

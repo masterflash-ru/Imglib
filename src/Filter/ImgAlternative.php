@@ -8,7 +8,7 @@ use Zend\Filter\FilterInterface;
 use Exception;
 
 
-class ImgResize  implements FilterInterface
+class ImgAlternative  implements FilterInterface
 {
     protected static $classMap = [
         'gd'                => 'Mf\Imglib\Filter\Adapter\Gd',
@@ -21,14 +21,11 @@ class ImgResize  implements FilterInterface
 
 
 	protected $_options = [
-		'width' => 700,
-		'height' => 100,
-		'method' => IMG_METHOD_SCALE_FIT_W,
-		'percent' => 0,
-		'halign' => IMG_ALIGN_CENTER,
-		'valign' => IMG_ALIGN_CENTER,
 		'adapter'=>'Gd',
 		'imagemagick_console_path' => "",
+        "formats" =>[
+            "webp"
+        ]
 	];
 
 	
@@ -40,10 +37,10 @@ class ImgResize  implements FilterInterface
 	public function filter($value)
 	{
         if (!is_array($value)){
-            throw new Exception("Для фильтра ImgResize на входе должен быть массив в которых полные пути к обрабатываемому файлу");
+            throw new Exception("Для фильтра ImgAlternative на входе должен быть массив с ключем 'default' в котором полный путь к обрабатываемому файлу");
         }
 
-        $this->_adapter->resize($value);
+        $value=array_merge($value,$this->_adapter->alternative($value["default"]));
 		return $value;
 	}
 	

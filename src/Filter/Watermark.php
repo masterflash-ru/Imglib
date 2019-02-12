@@ -31,7 +31,7 @@ class Watermark  implements FilterInterface
 
 public function filter($value)
 {
-    $this->_adapter->watermark($value);
+    $this->_adapter->watermark($value["default"]);
     return $value;
 }
 	

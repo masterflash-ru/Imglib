@@ -8,15 +8,29 @@ use Exception;
 
 class Gd extends ImgAbstract
 {
-	
+
+    protected static $support=[
+        "webp"=>"WebP Support"
+    ];
 /**
-* Resize image
+* ресайз изображений
 *
-* @param $content Content of source imge
-* @param $value Path to source file
-* @return Content of resized image
+* @param $value массив путей к файлу+имя имена
+* @return возвращает массив без изменений, но файлы уже преобразованы
 */
 	public function resize($value)
+	{
+        foreach ($value as $valueItem){
+            $this->resizeItem($valueItem);
+        }
+	return $value;
+	}
+
+/**
+* внутренняя для обработки одного элемента
+* $value - строка полного имени файла
+*/    
+	protected function resizeItem($value)
 	{
 		$content=$this->readImg($value);
 		
@@ -80,9 +94,13 @@ class Gd extends ImgAbstract
 			case IMAGETYPE_PNG:
 				ImagePng($targetImage, null, 0);
 				break;
+			case IMAGETYPE_WEBP:
+				imagewebp($targetImage, null, 0);
+				break;
+
 			default:
 				ob_end_clean();
-				throw new Exception("Неизвестный метод обработки картинок");	
+				throw new Exception("Неизвестный тип изображения: ".$imageType);	
 		}
 		ImageDestroy($targetImage);
 		$finalImage = ob_get_clean();
@@ -92,9 +110,45 @@ class Gd extends ImgAbstract
 		//ЕСЛИ точно вырезаем, тогда рекурсивно обратиться с методом для вырезки
 		if (IMG_METHOD_SCALE_WH_CROP==$this->_options['method']) {
             $this->_options['method']=IMG_METHOD_CROP;
-            return $this->resize($value);
+            return $this->resizeItem($value);
         }
 	return $value;
 	}
-	
+
+
+
+/**
+* генерирует альтернативные изображения из исходного
+* на входе строка  к исходному файлу
+* на выходе массив 
+*/
+    public function alternative($value)
+    {
+        $support=gd_info();
+        $path_parts = pathinfo($value);        
+        foreach ($this->_options["formats"] as $format){
+            $content=$this->readImg($value);
+            $sourceImage = imagecreatefromstring($content);
+            if (!is_resource($sourceImage)) {throw new Exception("Ошибка чтения файла $value");}
+            ob_start();
+            $value=[];
+            switch ($format){
+                case "webp":
+                    if (!$support[static::$support[$format]]) {
+                        throw new Exception("библиотека GD не поддерживает работу с форматом {$format}");
+                    }
+                    imagewebp($sourceImage,null,95);
+                    $finalImage = ob_get_clean();
+                    $value["webp"]=$path_parts["dirname"]."/".$path_parts["filename"].".webp";
+                    $this->writeImg($value["webp"], $finalImage);
+                    break;
+                default:
+                    ob_end_clean();
+                    throw new Exception("Формат {$format} не поддерживается адаптером ".__CLASS__);	
+            }
+            ImageDestroy($sourceImage);
+        }
+        return $value;
+        
+    }
 }

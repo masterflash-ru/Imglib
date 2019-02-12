@@ -28,15 +28,19 @@ public function __construct($options = array())
 */
 public function filter($value)
 {
-
-	$ext=array_reverse(explode(".",$value));
-    $ext=strtolower($ext[0]);       //получить тип файла
-    if ($ext=="png") {
-        shell_exec ($this->_options['imagemagick_console_path']."optipng -o{$this->_options['optipng']} $value");
+    if (!is_array($value)){
+        throw new Exception("Для фильтра ImgOptimize на входе должен быть массив с ключем 'default' в котором полный путь к обрабатываемому файлу");
     }
-     else {
-           shell_exec ($this->_options['imagemagick_console_path']."jpegoptim $value -m{$this->_options['jpegoptim']} --strip-all");
-     }
+    if (isset($value["default"])){
+        $ext=array_reverse(explode(".",$value["default"]));
+        $ext=strtolower($ext[0]);       //получить тип файла
+        if ($ext=="png") {
+            shell_exec ($this->_options['imagemagick_console_path']."optipng -o{$this->_options['optipng']} ".$value["default"]);
+        }
+         if ($ext=="jpg" || $ext=="jpeg"){
+               shell_exec ($this->_options['imagemagick_console_path']."jpegoptim ".$value["default"]." -m{$this->_options['jpegoptim']} --strip-all");
+         }
+    }
 	return $value;
 }
 	
