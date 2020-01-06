@@ -4,14 +4,14 @@
  */
 namespace Mf\Imglib\Filter;
 
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 use Exception;
 
 
 class Watermark  implements FilterInterface
 {
-	protected $_adapter=NULL;			//объект адаптера который обрабатывает графику
-    protected static $classMap = [
+  protected $_adapter=NULL; //объект адаптера который обрабатывает графику
+  protected static $classMap = [
         'gd'                => 'Mf\Imglib\Filter\Adapter\Gd',
         'imagick'           => 'Mf\Imglib\Filter\Adapter\Imagick',
         'consoleimagick'    => 'Mf\Imglib\Filter\Adapter\Consoleimagick',
@@ -34,7 +34,7 @@ public function filter($value)
     $this->_adapter->watermark($value["default"]);
     return $value;
 }
-	
+
 public function setOptions(array $options=[])
 	{
         if (!empty($options)&& is_array($options)){
@@ -60,5 +60,3 @@ public function setOptions(array $options=[])
 		return $this;
 	}
 }
-	
-

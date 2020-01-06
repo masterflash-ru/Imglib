@@ -4,7 +4,7 @@
  */
 namespace Mf\Imglib\Filter;
 
-use Zend\Filter\FilterInterface;
+use Laminas\Filter\FilterInterface;
 use Exception;
 
 class ImgOptimize  implements FilterInterface
